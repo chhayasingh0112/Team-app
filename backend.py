@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 import MySQLdb
+from flask_cors import CORS
 
 app = Flask(__name__)
-db = MySQLdb.connect(host="localhost", user="your_username", passwd="your_password", db="your_database")
+db = MySQLdb.connect(host="localhost", user="saurabh", passwd="password", db="team_management_app")
+CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # User routes
 @app.route("/users", methods=["GET"])
@@ -32,7 +35,7 @@ def get_teams():
 def create_team():
     teamname = request.json.get("teamname")
     cursor = db.cursor()
-    cursor.execute("INSERT INTO teams (teamname) VALUES (%s)", (teamname,))
+    cursor.execute("INSERT INTO teams (team_name) VALUES (%s)", (teamname,))
     db.commit()
     return jsonify({"message": "Team created successfully"})
 
@@ -49,7 +52,7 @@ def create_relationship():
     userid = request.json.get("userid")
     teamid = request.json.get("teamid")
     cursor = db.cursor()
-    cursor.execute("INSERT INTO relationships (userid, teamid) VALUES (%s, %s)", (userid, teamid))
+    cursor.execute("INSERT INTO relationships (user_id, team_id) VALUES (%s, %s)", (userid, teamid))
     db.commit()
     return jsonify({"message": "Relationship created successfully"})
 
